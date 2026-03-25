@@ -24,8 +24,8 @@
 
 /* ═══ CONFIG ═══════════════════════════════════════════════════════════════ */
 const CFG = {
-  RAZORPAY_KEY:  'rzp_test_XXXXXXXXXXXXXXXX',   // ← replace with your key
-  PAY_AMOUNT:    4900,                            // paise = ₹49
+  RAZORPAY_KEY:  'rzp_live_SVTO0UZWoqIgIs',   // ← replace with your key
+  PAY_AMOUNT:    100,                            // paise = ₹1
   PAY_CURRENCY:  'INR',
   PAY_NAME:      'EduCert Pro',
   PAY_DESC:      'School Leaving Certificate',
