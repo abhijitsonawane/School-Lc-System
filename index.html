@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduCert Pro — School Leaving Certificate Generator</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <!-- PDF libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- QR Code — using qrcode-generator (more reliable than qrcodejs) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Razorpay -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <span class="logo-icon">🎓</span>
+      <div>
+        <div class="logo-title">EduCert Pro</div>
+        <div class="logo-sub">School Leaving Certificate Generator</div>
+      </div>
+    </div>
+    <nav class="steps-nav">
+      <span class="step-pill active" id="pill-1">① Form</span>
+      <span class="step-arrow">›</span>
+      <span class="step-pill" id="pill-2">② Preview</span>
+      <span class="step-arrow">›</span>
+      <span class="step-pill" id="pill-3">③ Payment</span>
+      <span class="step-arrow">›</span>
+      <span class="step-pill" id="pill-4">④ Download</span>
+    </nav>
+  </div>
+</header>
+
+<main class="main-wrap">
+
+<!-- ══════════════════════════════════════════════
+     STEP 1 — FORM
+══════════════════════════════════════════════ -->
+<section class="page-section" id="section-form">
+  <div class="section-hero">
+    <h1>Generate School Leaving Certificate</h1>
+    <p>Fill all details below • Preview • Pay • Download print-ready A4 PDF</p>
+  </div>
+
+  <form id="lc-form" novalidate autocomplete="off">
+
+    <!-- ── SCHOOL / TRUST ───────────────────── -->
+    <div class="form-card">
+      <div class="card-head"><span class="card-icon">🏫</span><div><h2>School / Trust Details</h2><p>Official information that appears on the certificate</p></div></div>
+      <div class="form-grid">
+
+        <div class="f full"><label>Trust / Society Name <b class="req">*</b></label>
+          <input type="text" id="trustName" placeholder="e.g. Shri Saraswati Education Trust" required/>
+          <span class="emsg" id="e-trustName"></span></div>
+
+        <div class="f full"><label>School Name <b class="req">*</b></label>
+          <input type="text" id="schoolName" placeholder="e.g. Shri Saraswati Vidyalaya, Dhule" required/>
+          <span class="emsg" id="e-schoolName"></span></div>
+
+        <div class="f full"><label>School Address <b class="req">*</b></label>
+          <textarea id="schoolAddress" rows="2" placeholder="Full address with city, district, PIN" required></textarea>
+          <span class="emsg" id="e-schoolAddress"></span></div>
+
+        <div class="f"><label>UDISE Number <b class="req">*</b></label>
+          <input type="text" id="udiseNo" placeholder="11-digit UDISE code" maxlength="11" required/>
+          <span class="emsg" id="e-udiseNo"></span></div>
+
+        <div class="f"><label>Mobile Number <b class="req">*</b></label>
+          <input type="tel" id="schoolMobile" placeholder="10-digit mobile" maxlength="10" required/>
+          <span class="emsg" id="e-schoolMobile"></span></div>
+
+        <div class="f"><label>Email Address</label>
+          <input type="email" id="schoolEmail" placeholder="school@example.com"/></div>
+
+        <div class="f"><label>Website</label>
+          <input type="text" id="schoolWebsite" placeholder="www.school.edu.in"/></div>
+
+        <div class="f"><label>Chairman / President Name <b class="req">*</b></label>
+          <input type="text" id="chairmanName" placeholder="Full name of Chairman" required/>
+          <span class="emsg" id="e-chairmanName"></span></div>
+
+        <div class="f"><label>Headmaster / Principal Name <b class="req">*</b></label>
+          <input type="text" id="hmName" placeholder="Full name of HM / Principal" required/>
+          <span class="emsg" id="e-hmName"></span></div>
+
+        <!-- LOGO UPLOAD — fixed click handler -->
+        <div class="f full">
+          <label>School Logo <span class="hint">(PNG/JPG · max 2 MB · shown on certificate + watermark)</span></label>
+          <div class="upload-box" id="upload-box">
+            <!-- Hidden file input — triggered by JS, NOT by clicking wrapper -->
+            <input type="file" id="schoolLogo" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"/>
+            <div class="upload-placeholder" id="upload-placeholder">
+              <div style="font-size:2rem">📷</div>
+              <div class="upload-label">Click to select logo</div>
+              <div class="upload-sub">or drag & drop here</div>
+            </div>
+            <div class="upload-preview" id="upload-preview" style="display:none">
+              <img id="logo-img" src="" alt="School Logo"/>
+              <div class="upload-meta" id="upload-meta"></div>
+              <button type="button" class="remove-btn" id="remove-logo-btn">✕ Remove</button>
+            </div>
+          </div>
+          <div class="logo-status" id="logo-status"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── STUDENT DETAILS ──────────────────── -->
+    <div class="form-card">
+      <div class="card-head"><span class="card-icon">👤</span><div><h2>Student Details</h2><p>Personal information as per school records</p></div></div>
+      <div class="form-grid">
+
+        <div class="f full"><label>Student Full Name <b class="req">*</b></label>
+          <input type="text" id="studentName" placeholder="Full name as in school register" required/>
+          <span class="emsg" id="e-studentName"></span></div>
+
+        <div class="f"><label>PEN Number</label>
+          <input type="text" id="penNumber" placeholder="Permanent Education Number"/></div>
+
+        <div class="f"><label>Aadhaar Number</label>
+          <input type="text" id="aadhaarNo" placeholder="12-digit Aadhaar" maxlength="12"/></div>
+
+        <div class="f"><label>Date of Birth <b class="req">*</b></label>
+          <input type="date" id="dob" required/>
+          <span class="emsg" id="e-dob"></span></div>
+
+        <div class="f"><label>Gender <b class="req">*</b></label>
+          <select id="gender" required>
+            <option value="">— Select Gender —</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other / Transgender</option>
+          </select>
+          <span class="emsg" id="e-gender"></span></div>
+
+        <div class="f"><label>Father's Name <b class="req">*</b></label>
+          <input type="text" id="fatherName" placeholder="Father's full name" required/>
+          <span class="emsg" id="e-fatherName"></span></div>
+
+        <div class="f"><label>Mother's Name <b class="req">*</b></label>
+          <input type="text" id="motherName" placeholder="Mother's full name" required/>
+          <span class="emsg" id="e-motherName"></span></div>
+
+        <div class="f"><label>Caste / Category</label>
+          <select id="caste">
+            <option value="">— Select —</option>
+            <option>General / Open</option><option>OBC</option><option>SC</option>
+            <option>ST</option><option>NT-A</option><option>NT-B</option>
+            <option>NT-C</option><option>NT-D</option><option>VJ / DT</option>
+            <option>SBC</option><option>EWS</option>
+          </select></div>
+
+        <div class="f"><label>Nationality</label>
+          <select id="nationality">
+            <option value="Indian" selected>Indian</option>
+            <option value="NRI">NRI</option><option value="Other">Other</option>
+          </select></div>
+
+        <div class="f"><label>Religion</label>
+          <select id="religion">
+            <option value="">— Select —</option>
+            <option>Hindu</option><option>Muslim</option><option>Christian</option>
+            <option>Sikh</option><option>Buddhist</option><option>Jain</option><option>Other</option>
+          </select></div>
+
+      </div>
+    </div>
+
+    <!-- ── ACADEMIC DETAILS ─────────────────── -->
+    <div class="form-card">
+      <div class="card-head"><span class="card-icon">📚</span><div><h2>Academic Details</h2><p>Class, year, and academic record of the student</p></div></div>
+      <div class="form-grid">
+
+        <div class="f"><label>Class Last Studied <b class="req">*</b></label>
+          <select id="classStudied" required>
+            <option value="">— Select Class —</option>
+            <option>Nursery / Pre-Primary</option><option>KG / LKG</option><option>UKG</option>
+            <option>Class I</option><option>Class II</option><option>Class III</option>
+            <option>Class IV</option><option>Class V</option><option>Class VI</option>
+            <option>Class VII</option><option>Class VIII</option><option>Class IX</option>
+            <option>Class X (SSC)</option><option>Class XI (HSC I)</option><option>Class XII (HSC II)</option>
+          </select>
+          <span class="emsg" id="e-classStudied"></span></div>
+
+        <div class="f"><label>Academic Year <b class="req">*</b></label>
+          <select id="academicYear" required>
+            <option value="">— Select Year —</option>
+            <option>2025-2026</option><option>2024-2025</option><option>2023-2024</option>
+            <option>2022-2023</option><option>2021-2022</option><option>2020-2021</option>
+            <option>2019-2020</option><option>2018-2019</option><option>2017-2018</option>
+          </select>
+          <span class="emsg" id="e-academicYear"></span></div>
+
+        <div class="f"><label>Date of Admission <b class="req">*</b></label>
+          <input type="date" id="dateOfAdmission" required/>
+          <span class="emsg" id="e-dateOfAdmission"></span></div>
+
+        <div class="f"><label>Date of Leaving <b class="req">*</b></label>
+          <input type="date" id="dateOfLeaving" required/>
+          <span class="emsg" id="e-dateOfLeaving"></span></div>
+
+        <div class="f"><label>Progress / Result</label>
+          <select id="progress">
+            <option value="">— Select —</option>
+            <option>Excellent</option><option>Very Good</option><option>Good</option>
+            <option>Satisfactory</option><option>Promoted</option><option>Passed</option>
+            <option>Failed</option><option>Not Applicable</option>
+          </select></div>
+
+        <div class="f"><label>Conduct</label>
+          <select id="conduct">
+            <option value="">— Select —</option>
+            <option>Excellent</option><option>Very Good</option>
+            <option>Good</option><option>Satisfactory</option>
+          </select></div>
+
+        <div class="f"><label>Medium of Instruction</label>
+          <select id="medium">
+            <option value="">— Select Medium —</option>
+            <option>Marathi</option><option>Hindi</option><option>English</option>
+            <option>Urdu</option><option>Semi-English</option><option>Gujarati</option>
+            <option>Telugu</option><option>Kannada</option>
+          </select></div>
+
+        <div class="f"><label>LC Number</label>
+          <input type="text" id="lcNumber" placeholder="Auto-generated (editable)"/></div>
+
+        <div class="f full"><label>Reason for Leaving <b class="req">*</b></label>
+          <select id="reasonLeaving" required onchange="toggleOtherReason(this.value)">
+            <option value="">— Select Reason —</option>
+            <option>Transfer of Parents</option>
+            <option>Completion of Studies (Passed Out)</option>
+            <option>Admission to Another School</option>
+            <option>Left for Higher Studies</option>
+            <option>Parents' Request</option>
+            <option>Financial Reasons</option>
+            <option>Health Reasons</option>
+            <option>Migration / Relocation</option>
+            <option>Long Absence / Name Struck Off</option>
+            <option value="Other">Other (specify below)</option>
+          </select>
+          <span class="emsg" id="e-reasonLeaving"></span>
+          <input type="text" id="reasonOther" placeholder="Specify reason…" style="display:none;margin-top:8px;"/>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-ghost" onclick="resetForm()">🔄 Reset</button>
+      <button type="button" class="btn-primary" onclick="previewLC()">👁 Preview Certificate →</button>
+    </div>
+
+  </form>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     STEP 2 — PREVIEW
+══════════════════════════════════════════════ -->
+<section class="page-section hidden" id="section-preview">
+  <div class="toolbar">
+    <button class="btn-back" onclick="goToForm()">← Edit Form</button>
+    <h2 class="toolbar-title">Certificate Preview</h2>
+    <button class="btn-primary" onclick="goToPayment()">💳 Proceed to Payment →</button>
+  </div>
+  <div class="preview-wrap">
+    <div id="lc-certificate"><!-- injected by JS --></div>
+  </div>
+  <div class="preview-note">ℹ️ Exact preview · Complete payment to unlock Download &amp; Print</div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     STEP 3 — PAYMENT
+══════════════════════════════════════════════ -->
+<section class="page-section hidden" id="section-payment">
+  <div class="pay-card">
+    <div class="pay-icon">💳</div>
+    <h2>Complete Payment</h2>
+    <p>One-time fee to download your official School Leaving Certificate</p>
+    <div class="pay-summary">
+      <div class="pay-row"><span>School Leaving Certificate (PDF)</span><span>₹49</span></div>
+      <div class="pay-row"><span>Print-Ready A4 Format</span><span>Free</span></div>
+      <hr class="pay-hr"/>
+      <div class="pay-row total"><span>Total</span><span>₹49</span></div>
+    </div>
+    <button class="btn-razorpay" onclick="initiatePayment()">
+      <span>Pay ₹49 via Razorpay</span>
+      <small>UPI · Cards · Net Banking · Wallets</small>
+    </button>
+    <p class="pay-secure">🔒 100% secure · powered by Razorpay</p>
+    <button class="btn-skip" onclick="skipPayment()">Skip Payment (Demo / Testing)</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     STEP 4 — DOWNLOAD
+══════════════════════════════════════════════ -->
+<section class="page-section hidden" id="section-download">
+  <div class="dl-card">
+    <div class="dl-icon">✅</div>
+    <h2>Certificate Ready!</h2>
+    <p>Your School Leaving Certificate is ready to download or print.</p>
+    <div class="dl-actions">
+      <button class="btn-dl" onclick="downloadPDF()">⬇ Download PDF</button>
+      <button class="btn-pr" onclick="printCertificate()">🖨 Print</button>
+    </div>
+    <button class="btn-ghost" onclick="newCertificate()" style="margin-top:14px;">+ New Certificate</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════ QR VERIFY MODAL ══════════ -->
+<div class="modal-overlay hidden" id="verify-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-logo">🎓</span>
+      <div>
+        <h3>LC Verification</h3>
+        <p>EduCert Pro — Certificate Authenticity</p>
+      </div>
+      <button class="modal-close" onclick="closeVerifyModal()">✕</button>
+    </div>
+    <div id="verify-content"><!-- injected --></div>
+  </div>
+</div>
+
+<!-- ══════════ TOAST ══════════ -->
+<div class="toast hidden" id="toast"></div>
+
+<!-- ══════════ LOADER ══════════ -->
+<div class="loader-overlay hidden" id="loader-overlay">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <p id="loader-msg">Processing…</p>
+  </div>
+</div>
+
+<!--
+  ══════════════════════════════════════════════
+  OFF-SCREEN RENDER ZONE
+  Always in DOM, always rendered (position:fixed left:-9999px).
+  html2canvas reads from here → PDF never blank.
+  @media print shows only this zone → Print never blank.
+  ══════════════════════════════════════════════
+-->
+<div id="print-zone">
+  <div id="lc-certificate-print"><!-- injected by JS before PDF/Print --></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
