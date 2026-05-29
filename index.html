@@ -1,0 +1,3280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <title>Lc Portal </title>
+</head>
+
+<body>
+
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#1a237e;--gold:#c8a400;--gold-light:#fff8e1;--red:#b71c1c;--border:#c5cae9;--bg:#f4f6fa}
+
+.app{max-width:900px;margin:0 auto;padding:0 0 40px}
+
+
+.steps-bar{background:#fff;border-bottom:1px solid #e0e0e0;padding:0 20px;display:flex;overflow-x:auto;gap:0}
+.step-item{display:flex;align-items:center;gap:6px;padding:12px 14px 12px 0;font-size:12px;color:#9e9e9e;white-space:nowrap;cursor:default;flex-shrink:0}
+.step-item.active{color:#1a237e;font-weight:600}
+.step-item.done{color:#2e7d32}
+.step-dot{width:22px;height:22px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+
+
+.card{background:#fff;border:1px solid #e0e0e0;border-radius:10px;margin:16px;padding:20px}
+.section-hd{font-size:12px;font-weight:700;color:#1a237e;text-transform:uppercase;letter-spacing:1.2px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #e8eaf6;display:flex;align-items:center;gap:6px}
+
+.type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px}
+.type-card{border:2px solid #e0e0e0;border-radius:8px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;background:#fff}
+.type-card:hover{border-color:#5c6bc0}
+.type-card.sel{border-color:#1a237e;background:#e8eaf6}
+.type-card .tc-icon{font-size:22px;margin-bottom:4px}
+.type-card .tc-name{font-size:12px;font-weight:600;color:#1a237e}
+.type-card .tc-sub{font-size:10px;color:#757575;margin-top:2px}
+
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fg label{font-size:11px;font-weight:600;color:#455a64;text-transform:uppercase;letter-spacing:0.5px}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 11px;border:1px solid #cfd8dc;border-radius:6px;font-size:13px;color:#1a1a2e;background:#fafafa;font-family:inherit;transition:border .15s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#1a237e;background:#fff;outline:none}
+.fg textarea{height:60px;resize:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+.btn-primary{width:100%;padding:13px;background:#1a237e;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:0.5px;transition:background .2s}
+.btn-primary:hover{background:#283593}
+.btn-gold{background:#c8a400;color:#1a237e}
+.btn-gold:hover{background:#f0c000}
+.btn-outline{width:100%;padding:11px;background:#fff;color:#1a237e;border:2px solid #1a237e;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-outline:hover{background:#e8eaf6}
+
+.preview-wrap{margin:16px;background:#e8eaf6;border-radius:10px;padding:12px}
+.preview-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.preview-actions button{flex:1;min-width:120px;padding:9px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:all .2s}
+.btn-edit{background:#fff;color:#1a237e;border:1px solid #1a237e}
+.btn-pay{background:#1a237e;color:#fff}
+.btn-edit:hover{background:#e8eaf6}
+.btn-pay:hover{background:#283593}
+
+/* LC DOCUMENT */
+.lc-sheet{background:#fff;border:1px solid #ccc;padding:0;font-family:'Times New Roman','Georgia',serif;width:100%;page-break-inside:avoid}
+.lc-outer{border:4px double #1a237e;margin:10px;padding:10px 14px}
+.lc-top-strip{background:#1a237e;color:#fff;text-align:center;padding:5px 8px;font-size:9px;letter-spacing:2px;margin:-10px -14px 10px;font-family:'Segoe UI',sans-serif}
+.lc-emblem-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
+.lc-emblem{width:40px;height:40px;border:1.5px solid #1a237e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#1a237e;text-align:center;font-weight:700;flex-shrink:0}
+.lc-sch{text-align:center}
+.lc-sch-name{font-size:15px;font-weight:700;color:#1a237e;line-height:1.2}
+.lc-sch-name-mr{font-size:11px;color:#1a237e;font-weight:600;margin-bottom:2px}
+.lc-sch-addr{font-size:9px;color:#555;line-height:1.4}
+.lc-divider{height:2px;background:#1a237e;margin:8px 0 6px}
+.lc-divider-thin{height:0.5px;background:#1a237e;margin:4px 0}
+.lc-meta{display:flex;justify-content:space-between;font-size:9px;color:#333;margin-bottom:6px;gap:4px;flex-wrap:wrap}
+.lc-meta span{white-space:nowrap}
+.lc-title-block{text-align:center;margin:6px 0}
+.lc-doc-title{font-size:14px;font-weight:700;color:#1a237e;letter-spacing:2px;text-decoration:underline;text-underline-offset:3px}
+.lc-doc-marathi{font-size:11px;color:#b71c1c;font-weight:600;margin-top:2px}
+.lc-doc-type{display:inline-block;background:#1a237e;color:#fff;font-size:8px;padding:2px 10px;border-radius:2px;margin-top:3px;letter-spacing:1px;font-family:'Segoe UI',sans-serif}
+.lc-fields{margin-top:8px}
+.lc-row{display:flex;align-items:baseline;border-bottom:0.5px solid #d0d0d0;padding:3.5px 0;gap:4px}
+.lc-row:last-child{border-bottom:none}
+.lc-sno{font-size:9px;color:#888;min-width:14px;flex-shrink:0}
+.lc-lbl{font-size:9.5px;color:#444;min-width:110px;flex-shrink:0;line-height:1.3}
+.lc-lbl-mr{font-size:8px;color:#666;display:block}
+.lc-colon{font-size:10px;color:#333;margin:0 3px;flex-shrink:0}
+.lc-val{font-size:10px;font-weight:700;color:#1a237e;flex:1;border-bottom:1px dotted #999;min-height:13px;padding-bottom:1px;word-break:break-word}
+.lc-cert{margin-top:8px;padding:5px 8px;border:1px solid #c8a400;background:#fffde7;font-size:8.5px;color:#555;border-radius:3px;line-height:1.5}
+.lc-sign-area{display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px;padding-top:8px;border-top:1px solid #1a237e;gap:4px}
+.lc-sign-box{text-align:center;flex:1}
+.lc-sign-line{height:28px;border-bottom:1px solid #333;margin-bottom:3px}
+.lc-sign-lbl{font-size:8px;color:#555;text-transform:uppercase;letter-spacing:0.5px;line-height:1.3;font-family:'Segoe UI',sans-serif}
+.lc-stamp-box{text-align:center;flex:1.2}
+.lc-stamp-circle{width:64px;height:64px;border-radius:50%;border:2px dashed #999;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#aaa;text-align:center;line-height:1.3;font-family:'Segoe UI',sans-serif}
+.lc-footer{text-align:center;font-size:8px;color:#888;margin-top:8px;padding-top:6px;border-top:0.5px solid #e0e0e0;font-family:'Segoe UI',sans-serif}
+
+.pay-modal-wrap{min-height:420px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);border-radius:10px;margin:16px;padding:20px}
+.pay-modal{background:#fff;border-radius:12px;padding:24px;width:100%;max-width:340px}
+.pay-modal h2{font-size:18px;font-weight:700;color:#1a237e;margin-bottom:4px}
+.pay-modal p{font-size:12px;color:#757575;margin-bottom:16px}
+.amt-box{background:#e8eaf6;border-radius:8px;padding:14px;text-align:center;margin-bottom:16px;border:1px solid #c5cae9}
+.amt-val{font-size:28px;font-weight:700;color:#1a237e}
+.amt-sub{font-size:11px;color:#757575;margin-top:2px}
+.pay-input{width:100%;padding:10px 12px;border:1px solid #cfd8dc;border-radius:6px;font-size:13px;margin-bottom:10px;font-family:inherit}
+.pay-input:focus{border-color:#1a237e;outline:none}
+.secure-note{text-align:center;font-size:10px;color:#9e9e9e;margin-top:8px}
+
+.success-wrap{text-align:center;padding:30px 20px;margin:16px}
+.success-circle{width:64px;height:64px;border-radius:50%;background:#e8f5e9;border:2px solid #66bb6a;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
+.success-wrap h2{font-size:20px;font-weight:700;color:#2e7d32;margin-bottom:8px}
+.success-wrap p{font-size:13px;color:#616161;margin-bottom:20px}
+.txn-card{background:#f5f5f5;border-radius:8px;padding:12px 16px;font-size:12px;color:#616161;margin-bottom:20px;text-align:left}
+.dl-row{display:flex;gap:10px;flex-wrap:wrap}
+.dl-row button{flex:1;min-width:130px;padding:11px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:none}
+.btn-dl{background:#c8a400;color:#1a237e}
+.btn-dl:hover{background:#f0c000}
+.btn-new{background:#e8eaf6;color:#1a237e}
+.btn-new:hover{background:#c5cae9}
+
+
+
+
+
+/* SECTION TITLE */
+.section-hd{
+  font-size:13px;
+  color:#1a237e;
+  border-bottom:none;
+  margin-bottom:20px;
+  position:relative;
+  padding-bottom:12px;
+}
+
+.section-hd::after{
+  content:'';
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:60px;
+  height:4px;
+  border-radius:20px;
+  background:linear-gradient(90deg,#1a237e,#c8a400);
+}
+
+/* INPUTS */
+.fg input,
+.fg select,
+.fg textarea{
+  background:#fff;
+  border:1.5px solid #dbe2ff;
+  border-radius:14px;
+  padding:13px 15px;
+  font-size:14px;
+  transition:.25s;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.03);
+}
+
+.fg input:focus,
+.fg select:focus,
+.fg textarea:focus{
+  border-color:#3949ab;
+  box-shadow:
+    0 0 0 4px rgba(57,73,171,.12),
+    0 8px 20px rgba(57,73,171,.08);
+  transform:translateY(-1px);
+}
+
+/* TYPE CARDS */
+.type-card{
+  border:none;
+  border-radius:22px;
+  padding:24px 12px;
+  background:rgba(255,255,255,.85);
+  box-shadow:0 8px 25px rgba(0,0,0,.06);
+  transition:.35s;
+}
+
+.type-card:hover{
+  transform:translateY(-6px) scale(1.02);
+  box-shadow:0 18px 35px rgba(26,35,126,.15);
+}
+
+.type-card.sel{
+  background:linear-gradient(135deg,#1a237e,#3949ab);
+  color:#fff;
+}
+
+.tc-icon{
+  font-size:34px !important;
+}
+
+.tc-name{
+  font-size:15px !important;
+  font-weight:700 !important;
+}
+
+/* BUTTONS */
+.btn-primary{
+  background:linear-gradient(135deg,#1a237e,#3949ab);
+  border:none;
+  border-radius:16px;
+  padding:15px;
+  font-size:15px;
+  box-shadow:0 10px 24px rgba(26,35,126,.22);
+  transition:.3s;
+}
+
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 16px 32px rgba(26,35,126,.28);
+}
+
+.btn-outline{
+  border-radius:16px;
+  border:2px solid #1a237e;
+}
+
+/* PREVIEW */
+.preview-wrap{
+  background:rgba(255,255,255,.7);
+  border-radius:26px;
+  backdrop-filter:blur(18px);
+  box-shadow:0 15px 35px rgba(0,0,0,.08);
+  padding:18px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .hdr{
+    padding:20px;
+    border-radius:18px;
+  }
+
+  .hdr-txt h1{
+    font-size:21px;
+  }
+
+  .card{
+    padding:20px;
+    border-radius:18px;
+  }
+
+  .type-card{
+    padding:18px 10px;
+  }
+
+}
+/* PREMIUM PRICE BADGE */
+
+.hdr{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+.hdr-right{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* PRICE CARD */
+
+.price-badge{
+  position:relative;
+  min-width:150px;
+  padding:14px 18px;
+  border-radius:22px;
+
+  background:
+    linear-gradient(135deg,#ffd54f,#ffb300);
+
+  color:#1a237e;
+
+  box-shadow:
+    0 15px 35px rgba(255,193,7,.35),
+    inset 0 2px 6px rgba(255,255,255,.45);
+
+  text-align:center;
+
+  overflow:hidden;
+
+  animation:floatCard 3s ease-in-out infinite;
+}
+
+/* GLOW EFFECT */
+
+.price-badge::before{
+  content:'';
+  position:absolute;
+  width:120px;
+  height:120px;
+  background:rgba(255,255,255,.22);
+  border-radius:50%;
+  top:-60px;
+  right:-40px;
+}
+
+/* SMALL TEXT */
+
+.price-small{
+  display:block;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+  opacity:.8;
+  margin-bottom:4px;
+  text-transform:uppercase;
+}
+
+/* PRICE */
+
+.price-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  line-height:1;
+}
+
+.rupee{
+  font-size:22px;
+  font-weight:800;
+  margin-top:4px;
+}
+
+.price-main{
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:-2px;
+}
+
+/* TAG */
+
+.price-tag{
+  display:inline-block;
+  margin-top:6px;
+  background:#1a237e;
+  color:#fff;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+/* FLOAT ANIMATION */
+
+@keyframes floatCard{
+  0%{transform:translateY(0px)}
+  50%{transform:translateY(-4px)}
+  100%{transform:translateY(0px)}
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .hdr{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .hdr-right{
+    width:100%;
+  }
+
+  .price-badge{
+    width:100%;
+  }
+
+}
+/* =========================
+   PREMIUM HERO HEADER
+========================= */
+
+.hdr{
+  position:relative;
+  overflow:hidden;
+
+  background:
+    linear-gradient(135deg,#0f172a 0%,#1e3a8a 45%,#312e81 100%);
+
+  border-radius:32px;
+
+  padding:34px;
+
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:28px;
+
+  box-shadow:
+    0 25px 60px rgba(15,23,42,.35),
+    inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+/* BACKGROUND GLOW */
+
+.hdr::before{
+  content:'';
+  position:absolute;
+  width:380px;
+  height:380px;
+  background:rgba(255,255,255,.06);
+  border-radius:50%;
+  top:-160px;
+  right:-120px;
+}
+
+.hdr::after{
+  content:'';
+  position:absolute;
+  width:240px;
+  height:240px;
+  background:rgba(255,193,7,.12);
+  border-radius:50%;
+  bottom:-120px;
+  left:-60px;
+}
+
+/* LEFT SECTION */
+
+.hdr-left{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  z-index:2;
+}
+
+/* LOGO WRAP */
+
+.hdr-logo-wrap{
+  position:relative;
+}
+
+.hdr-logo-wrap::before{
+  content:'';
+  position:absolute;
+  inset:-6px;
+  border-radius:24px;
+
+  background:
+    linear-gradient(135deg,#ffd54f,#ffb300);
+
+  filter:blur(12px);
+  opacity:.5;
+}
+
+/* LOGO */
+
+.hdr-logo{
+  position:relative;
+
+  width:72px;
+  height:72px;
+
+  border-radius:22px;
+
+  background:
+    linear-gradient(135deg,#ffd54f,#ffb300);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:#111827;
+
+  font-size:26px;
+  font-weight:900;
+
+  letter-spacing:1px;
+
+  box-shadow:
+    0 10px 30px rgba(255,193,7,.35);
+
+  border:1px solid rgba(255,255,255,.3);
+}
+
+/* TEXT */
+
+.hdr-txt h1{
+  font-size:30px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:.3px;
+  margin-bottom:6px;
+}
+
+.hdr-txt p{
+  color:rgba(255,255,255,.75);
+  font-size:14px;
+  letter-spacing:.5px;
+}
+
+/* RIGHT SECTION */
+
+.hdr-right{
+  z-index:2;
+}
+
+/* HERO CONTENT */
+
+.hero-content{
+  width:100%;
+  z-index:2;
+
+  margin-top:12px;
+
+  padding-top:28px;
+
+  border-top:1px solid rgba(255,255,255,.12);
+}
+
+/* HERO TAG */
+
+.hero-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  background:rgba(255,255,255,.1);
+
+  border:1px solid rgba(255,255,255,.15);
+
+  color:#fff;
+
+  padding:9px 16px;
+
+  border-radius:999px;
+
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1px;
+
+  backdrop-filter:blur(10px);
+
+  margin-bottom:18px;
+}
+
+.hero-tag::before{
+  content:'✔';
+  color:#ffd54f;
+  font-size:12px;
+}
+
+/* HEADING */
+
+.hero-content h2{
+  font-size:42px;
+  line-height:1.15;
+  max-width:760px;
+
+  color:#fff;
+
+  font-weight:900;
+
+  letter-spacing:-1px;
+
+  margin-bottom:14px;
+}
+
+/* SUBTEXT */
+
+.hero-content p{
+  font-size:16px;
+  line-height:1.7;
+
+  color:rgba(255,255,255,.78);
+
+  max-width:650px;
+}
+
+/* PREMIUM PRICE CARD */
+
+.price-badge{
+  position:relative;
+
+  background:
+    linear-gradient(135deg,#ffd54f,#ffb300);
+
+  padding:16px 20px;
+
+  border-radius:24px;
+
+  min-width:170px;
+
+  text-align:center;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 18px 40px rgba(255,193,7,.35),
+    inset 0 2px 8px rgba(255,255,255,.4);
+
+  animation:floatCard 3s ease-in-out infinite;
+}
+
+.price-badge::before{
+  content:'';
+  position:absolute;
+
+  width:140px;
+  height:140px;
+
+  background:rgba(255,255,255,.25);
+
+  border-radius:50%;
+
+  top:-70px;
+  right:-40px;
+}
+
+.price-small{
+  display:block;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  color:#1e293b;
+  opacity:.75;
+  margin-bottom:6px;
+  text-transform:uppercase;
+}
+
+.price-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  line-height:1;
+}
+
+.rupee{
+  font-size:24px;
+  font-weight:800;
+  margin-top:6px;
+  color:#111827;
+}
+
+.price-main{
+  font-size:48px;
+  font-weight:900;
+  letter-spacing:-3px;
+  color:#111827;
+}
+
+.price-tag{
+  display:inline-block;
+
+  margin-top:8px;
+
+  background:#111827;
+  color:#fff;
+
+  padding:5px 12px;
+
+  border-radius:999px;
+
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+/* FLOAT */
+
+@keyframes floatCard{
+  0%{transform:translateY(0px)}
+  50%{transform:translateY(-4px)}
+  100%{transform:translateY(0px)}
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .hdr{
+    padding:24px;
+    border-radius:24px;
+  }
+
+  .hdr-left{
+    width:100%;
+  }
+
+  .hdr-right{
+    width:100%;
+  }
+
+  .price-badge{
+    width:100%;
+  }
+
+  .hero-content{
+    margin-top:4px;
+    padding-top:22px;
+  }
+
+  .hero-content h2{
+    font-size:28px;
+  }
+
+  .hero-content p{
+    font-size:14px;
+  }
+
+  .hdr-logo{
+    width:62px;
+    height:62px;
+    font-size:22px;
+  }
+
+  .hdr-txt h1{
+    font-size:22px;
+  }
+
+}
+/* =========================
+   PREMIUM HERO CONTENT
+========================= */
+
+.hero-content{
+
+  position:relative;
+
+  width:100%;
+
+  margin-top:24px;
+
+  padding:34px;
+
+  border-radius:32px;
+
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.10),
+      rgba(255,255,255,.04)
+    );
+
+  border:1px solid rgba(255,255,255,.12);
+
+  backdrop-filter:blur(18px);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+/* GLOW EFFECT */
+
+.hero-content::before{
+  content:'';
+  position:absolute;
+
+  width:260px;
+  height:260px;
+
+  border-radius:50%;
+
+  background:rgba(255,213,79,.12);
+
+  top:-120px;
+  right:-80px;
+}
+
+.hero-content::after{
+  content:'';
+  position:absolute;
+
+  width:180px;
+  height:180px;
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,.05);
+
+  bottom:-80px;
+  left:-40px;
+}
+
+/* TAG */
+
+.hero-tag{
+
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+
+  padding:10px 18px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.08);
+
+  border:1px solid rgba(255,255,255,.12);
+
+  color:#fff;
+
+  font-size:12px;
+  font-weight:700;
+
+  letter-spacing:1.2px;
+
+  text-transform:uppercase;
+
+  margin-bottom:24px;
+
+  backdrop-filter:blur(12px);
+}
+
+/* LIVE DOT */
+
+.tag-live{
+
+  width:10px;
+  height:10px;
+
+  border-radius:50%;
+
+  background:#22c55e;
+
+  box-shadow:
+    0 0 10px #22c55e,
+    0 0 20px rgba(34,197,94,.7);
+}
+
+/* TITLE */
+
+.hero-title{
+
+  font-size:62px;
+
+  line-height:1.02;
+
+  font-weight:900;
+
+  letter-spacing:-3px;
+
+  color:#fff;
+
+  margin-bottom:20px;
+
+  max-width:820px;
+
+  position:relative;
+  z-index:2;
+}
+
+/* GOLD TEXT */
+
+.hero-title span{
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffd54f,
+      #ffb300,
+      #fff176
+    );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* WHITE GLOW TEXT */
+
+.hero-title strong{
+
+  color:#fff;
+
+  text-shadow:
+    0 0 20px rgba(255,255,255,.3);
+}
+
+/* SUBTITLE */
+
+.hero-subtitle{
+
+  max-width:720px;
+
+  font-size:18px;
+
+  line-height:1.8;
+
+  color:rgba(255,255,255,.74);
+
+  margin-bottom:34px;
+
+  position:relative;
+  z-index:2;
+}
+
+/* FEATURE CARDS */
+
+.hero-cards{
+
+  display:flex;
+  flex-wrap:wrap;
+
+  gap:16px;
+
+  position:relative;
+  z-index:2;
+}
+
+/* MINI CARD */
+
+.hero-mini-card{
+
+  flex:1;
+  min-width:220px;
+
+  display:flex;
+  align-items:center;
+  gap:16px;
+
+  padding:18px;
+
+  border-radius:24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.10),
+      rgba(255,255,255,.05)
+    );
+
+  border:1px solid rgba(255,255,255,.10);
+
+  backdrop-filter:blur(12px);
+
+  transition:.35s;
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.12);
+}
+
+/* HOVER */
+
+.hero-mini-card:hover{
+
+  transform:translateY(-6px);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.14),
+      rgba(255,255,255,.08)
+    );
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.18);
+}
+
+/* ICON */
+
+.mini-icon{
+
+  width:58px;
+  height:58px;
+
+  border-radius:18px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:26px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffd54f,
+      #ffb300
+    );
+
+  box-shadow:
+    0 10px 25px rgba(255,193,7,.3);
+}
+
+/* CARD TEXT */
+
+.hero-mini-card h4{
+
+  color:#fff;
+
+  font-size:17px;
+
+  font-weight:700;
+
+  margin-bottom:4px;
+}
+
+.hero-mini-card span{
+
+  color:rgba(255,255,255,.7);
+
+  font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .hero-content{
+    padding:24px;
+    border-radius:24px;
+  }
+
+  .hero-title{
+    font-size:38px;
+    letter-spacing:-2px;
+  }
+
+  .hero-subtitle{
+    font-size:15px;
+    line-height:1.7;
+  }
+
+  .hero-mini-card{
+    min-width:100%;
+  }
+
+}
+/* ===== PREMIUM STEP BAR ===== */
+
+.steps-wrapper{
+  padding:18px 20px 8px;
+}
+
+.steps-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.12);
+  padding:18px 20px;
+  border-radius:22px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  overflow-x:auto;
+  gap:10px;
+}
+
+.step-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  min-width:78px;
+  position:relative;
+  z-index:2;
+}
+
+.step-dot{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  font-weight:700;
+  color:#b0b7d1;
+  background:rgba(255,255,255,0.05);
+  border:2px solid rgba(255,255,255,0.12);
+  transition:all .3s ease;
+}
+
+.step-item span{
+  font-size:11px;
+  font-weight:600;
+  color:#aeb6d4;
+  letter-spacing:.3px;
+  white-space:nowrap;
+  font-family:'Inter',sans-serif;
+}
+
+/* ACTIVE STEP */
+.step-item.active .step-dot{
+  background:linear-gradient(135deg,#ffd54f,#ffb300);
+  color:#111827;
+  border:none;
+  box-shadow:
+    0 6px 18px rgba(255,193,7,0.35),
+    0 0 0 5px rgba(255,213,79,0.12);
+}
+
+.step-item.active span{
+  color:#ffffff;
+}
+
+/* DONE STEP */
+.step-item.done .step-dot{
+  background:#22c55e;
+  color:#ffffff;
+  border:none;
+  box-shadow:0 6px 18px rgba(34,197,94,0.25);
+}
+
+.step-item.done span{
+  color:#d1fae5;
+}
+
+/* CONNECTING LINE */
+.step-line{
+  flex:1;
+  height:2px;
+  min-width:35px;
+  background:linear-gradient(
+    90deg,
+    rgba(255,255,255,0.12),
+    rgba(255,255,255,0.05)
+  );
+  border-radius:20px;
+  margin-bottom:22px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .steps-bar{
+    padding:14px 14px;
+    border-radius:18px;
+  }
+
+  .step-dot{
+    width:36px;
+    height:36px;
+    font-size:12px;
+  }
+
+  .step-item span{
+    font-size:10px;
+  }
+
+  .step-line{
+    min-width:20px;
+  }
+}
+/* ===== MODERN ANIMATED STEP BAR ===== */
+
+.steps-wrapper{
+  padding:20px;
+  position:relative;
+}
+
+.steps-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:20px 24px;
+  border-radius:24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.10),
+      rgba(255,255,255,0.04)
+    );
+
+  backdrop-filter:blur(18px);
+
+  border:1px solid rgba(255,255,255,0.10);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.20),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+
+  overflow-x:auto;
+
+  animation:fadeSlide .7s ease;
+}
+
+/* STEP ITEM */
+.step-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  position:relative;
+  z-index:2;
+  min-width:82px;
+  transition:all .3s ease;
+}
+
+/* STEP DOT */
+.step-dot{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:14px;
+  font-weight:700;
+
+  color:#b7c0d8;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.08),
+      rgba(255,255,255,0.03)
+    );
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  transition:all .35s ease;
+
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.08),
+    0 4px 12px rgba(0,0,0,0.18);
+}
+
+/* TEXT */
+.step-item span{
+  font-size:11px;
+  font-weight:600;
+  color:#aeb8d3;
+  font-family:'Inter',sans-serif;
+  letter-spacing:.3px;
+  transition:all .3s ease;
+}
+
+/* ACTIVE STEP */
+.step-item.active .step-dot{
+  background:linear-gradient(135deg,#ffd54f,#ffb300);
+  color:#111827;
+  border:none;
+
+  transform:translateY(-3px) scale(1.05);
+
+  box-shadow:
+    0 8px 24px rgba(255,193,7,0.40),
+    0 0 0 8px rgba(255,213,79,0.12);
+
+  animation:pulseGlow 2s infinite;
+}
+
+.step-item.active span{
+  color:#ffffff;
+}
+
+/* DONE STEP */
+.step-item.done .step-dot{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;
+  border:none;
+
+  box-shadow:
+    0 6px 18px rgba(34,197,94,0.35);
+}
+
+.step-item.done span{
+  color:#d1fae5;
+}
+
+/* LINE */
+.step-line{
+  flex:1;
+  min-width:40px;
+  height:3px;
+  border-radius:30px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.15),
+      rgba(255,255,255,0.04)
+    );
+
+  position:relative;
+  overflow:hidden;
+
+  margin-bottom:24px;
+}
+
+/* MOVING SHINE EFFECT */
+.step-line::after{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-60%;
+  width:50%;
+  height:100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.45),
+      transparent
+    );
+
+  animation:lineMove 2.8s linear infinite;
+}
+
+/* ANIMATIONS */
+
+@keyframes pulseGlow{
+  0%{
+    box-shadow:
+      0 8px 24px rgba(255,193,7,0.35),
+      0 0 0 0 rgba(255,213,79,0.20);
+  }
+
+  70%{
+    box-shadow:
+      0 8px 24px rgba(255,193,7,0.45),
+      0 0 0 14px rgba(255,213,79,0);
+  }
+
+  100%{
+    box-shadow:
+      0 8px 24px rgba(255,193,7,0.35),
+      0 0 0 0 rgba(255,213,79,0);
+  }
+}
+
+@keyframes lineMove{
+  100%{
+    left:120%;
+  }
+}
+
+@keyframes fadeSlide{
+  from{
+    opacity:0;
+    transform:translateY(16px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .steps-bar{
+    padding:16px;
+    border-radius:18px;
+  }
+
+  .step-dot{
+    width:38px;
+    height:38px;
+    font-size:12px;
+  }
+
+  .step-item span{
+    font-size:10px;
+  }
+
+  .step-line{
+    min-width:24px;
+    margin-bottom:20px;
+  }
+}
+/* ===== SCHOOL THEME BACKGROUND ===== */
+
+body{
+  font-family:'Segoe UI',sans-serif;
+  min-height:100vh;
+  color:#1a1a2e;
+
+  background-color:#0f172a;
+
+  /* PATTERN */
+  background-image:
+
+    linear-gradient(
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px
+    ),
+
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px
+    ),
+
+    radial-gradient(
+      circle at top right,
+      rgba(255,213,79,0.10),
+      transparent 25%
+    ),
+
+    radial-gradient(
+      circle at bottom left,
+      rgba(59,130,246,0.12),
+      transparent 30%
+    );
+
+  background-size:
+    40px 40px,
+    40px 40px,
+    100% 100%,
+    100% 100%;
+
+  background-attachment:fixed;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* FLOATING SCHOOL ICONS EFFECT */
+body::before{
+  content:'📘 ✏️ 📚 🎓 🏫';
+
+  position:fixed;
+  top:0;
+  left:0;
+
+  width:100%;
+  height:100%;
+
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+
+  font-size:34px;
+
+  opacity:0.035;
+
+  pointer-events:none;
+
+  animation:floatBg 20s linear infinite;
+}
+
+/* SOFT OVERLAY */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(15,23,42,0.78),
+      rgba(30,41,59,0.82)
+    );
+
+  z-index:-1;
+}
+
+/* ANIMATION */
+@keyframes floatBg{
+
+  0%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-15px);
+  }
+
+  100%{
+    transform:translateY(0px);
+  }
+}
+/* ===== PREMIUM LC DESIGN ===== */
+
+.lc-sheet{
+  background:#ffffff;
+  padding:0;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:
+    0 15px 45px rgba(0,0,0,0.12);
+}
+
+/* OUTER BORDER */
+.lc-outer{
+  position:relative;
+  border:2px solid #0f172a;
+  padding:18px 22px;
+  background:#fff;
+}
+
+/* INNER BORDER */
+.lc-outer::before{
+  content:'';
+  position:absolute;
+  inset:8px;
+  border:1px solid #cbd5e1;
+  pointer-events:none;
+}
+
+/* HEADER */
+.lc-emblem-row{
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.lc-sch-name-mr{
+  font-size:14px;
+  font-weight:700;
+  color:#0f172a;
+  letter-spacing:.3px;
+}
+
+.lc-sch-name{
+  font-size:24px;
+  font-weight:800;
+  color:#1e3a8a;
+  letter-spacing:.5px;
+  margin-top:2px;
+  text-transform:uppercase;
+}
+
+.lc-sch-addr{
+  font-size:11px;
+  color:#64748b;
+  margin-top:5px;
+  line-height:1.5;
+}
+
+/* DIVIDER */
+.lc-divider{
+  height:2px;
+  background:
+    linear-gradient(
+      90deg,
+      #1e3a8a,
+      #f59e0b,
+      #1e3a8a
+    );
+  margin:10px 0;
+  border-radius:20px;
+}
+
+.lc-divider-thin{
+  height:1px;
+  background:#cbd5e1;
+  margin:6px 0;
+}
+
+/* META */
+.lc-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  font-size:10px;
+  color:#334155;
+}
+
+.lc-meta b{
+  color:#0f172a;
+}
+
+/* TITLE */
+.lc-title-block{
+  text-align:center;
+  padding:8px 0;
+}
+
+.lc-doc-marathi{
+  font-size:13px;
+  color:#991b1b;
+  font-weight:700;
+}
+
+.lc-doc-title{
+  font-size:22px;
+  font-weight:800;
+  color:#0f172a;
+  letter-spacing:1px;
+  margin-top:4px;
+}
+
+.lc-doc-type{
+  display:inline-block;
+  margin-top:8px;
+  padding:6px 14px;
+  border-radius:30px;
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+  box-shadow:0 4px 14px rgba(37,99,235,.25);
+}
+
+/* FIELDS */
+.lc-fields{
+  margin-top:12px;
+}
+
+.lc-row{
+  display:flex;
+  align-items:flex-start;
+  gap:6px;
+  padding:6px 0;
+  border-bottom:1px dashed #dbe2ea;
+}
+
+.lc-sno{
+  width:20px;
+  font-size:10px;
+  color:#64748b;
+  font-weight:700;
+}
+
+.lc-lbl{
+  width:190px;
+  font-size:11px;
+  color:#334155;
+  font-weight:600;
+  line-height:1.4;
+}
+
+.lc-lbl-mr{
+  display:block;
+  font-size:9px;
+  color:#94a3b8;
+  margin-top:1px;
+}
+
+.lc-colon{
+  font-weight:700;
+  color:#475569;
+}
+
+.lc-val{
+  flex:1;
+  font-size:11px;
+  font-weight:700;
+  color:#0f172a;
+  border-bottom:1px dotted #94a3b8;
+  padding-bottom:2px;
+  min-height:16px;
+}
+
+/* CERTIFICATE BOX */
+.lc-cert{
+  margin-top:14px;
+  padding:12px 14px;
+  background:#f8fafc;
+  border-left:4px solid #1e3a8a;
+  border-radius:8px;
+  font-size:10px;
+  color:#334155;
+  line-height:1.7;
+}
+
+/* SIGN AREA */
+.lc-sign-area{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  margin-top:26px;
+}
+
+.lc-sign-box{
+  flex:1;
+  text-align:center;
+}
+
+.lc-sign-line{
+  border-bottom:1.5px solid #0f172a;
+  height:40px;
+  margin-bottom:6px;
+}
+
+.lc-sign-lbl{
+  font-size:9px;
+  color:#475569;
+  font-weight:600;
+  line-height:1.5;
+}
+
+/* STAMP */
+.lc-stamp-box{
+  width:160px;
+  text-align:center;
+}
+
+.lc-stamp-circle{
+  width:85px;
+  height:85px;
+  margin:auto;
+  border:2px dashed #94a3b8;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:8px;
+  color:#94a3b8;
+  line-height:1.4;
+}
+
+/* FOOTER */
+.lc-footer{
+  margin-top:18px;
+  padding-top:10px;
+  border-top:1px solid #e2e8f0;
+  text-align:center;
+  font-size:9px;
+  color:#64748b;
+  line-height:1.6;
+}
+
+
+/* ===== MODERN EDUCATION PREMIUM BACKGROUND ===== */
+
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:
+    
+    /* SOFT BLUE GLOW */
+    radial-gradient(circle at top left,
+      rgba(37,99,235,.10),
+      transparent 30%),
+
+    radial-gradient(circle at bottom right,
+      rgba(14,165,233,.10),
+      transparent 28%),
+
+    radial-gradient(circle at center,
+      rgba(99,102,241,.05),
+      transparent 35%),
+
+    /* MAIN BACKGROUND */
+    linear-gradient(
+      135deg,
+      #f8fbff 0%,
+      #eef4ff 45%,
+      #f7faff 100%
+    );
+
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* EDUCATION PATTERN */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+
+  background-image:
+
+    /* BOOK ICON STYLE BOXES */
+    linear-gradient(rgba(37,99,235,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,.035) 1px, transparent 1px),
+
+    /* DOTS */
+    radial-gradient(rgba(15,23,42,.06) 1px, transparent 1px);
+
+  background-size:
+    80px 80px,
+    80px 80px,
+    22px 22px;
+
+  pointer-events:none;
+  z-index:-2;
+}
+
+/* FLOATING BLUR EFFECTS */
+body::after{
+  content:'';
+  position:fixed;
+  width:500px;
+  height:500px;
+  top:-120px;
+  right:-120px;
+
+  background:radial-gradient(
+    circle,
+    rgba(37,99,235,.10),
+    transparent 70%
+  );
+
+  filter:blur(40px);
+  z-index:-1;
+  pointer-events:none;
+}
+
+/* OPTIONAL FLOATING SHAPES */
+.edu-shape{
+  position:fixed;
+  border-radius:50%;
+  background:rgba(255,255,255,.45);
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 30px rgba(15,23,42,.05);
+  z-index:-1;
+}
+
+.edu-shape.s1{
+  width:140px;
+  height:140px;
+  top:120px;
+  left:-40px;
+}
+
+.edu-shape.s2{
+  width:90px;
+  height:90px;
+  bottom:120px;
+  right:40px;
+}
+
+.edu-shape.s3{
+  width:60px;
+  height:60px;
+  top:50%;
+  right:18%;
+}
+
+/* APP CONTAINER PREMIUM FEEL */
+.app{
+  position:relative;
+  z-index:2;
+}
+/* ===== DARK PREMIUM EDUCATION BACKGROUND ===== */
+
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:
+    radial-gradient(circle at top left,
+      rgba(59,130,246,.18),
+      transparent 28%),
+
+    radial-gradient(circle at bottom right,
+      rgba(14,165,233,.14),
+      transparent 30%),
+
+    linear-gradient(
+      135deg,
+      #020617 0%,
+      #0f172a 45%,
+      #111827 100%
+    );
+
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+  color:#fff;
+}
+
+/* GRID + EDUCATION PATTERN */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+
+  background-size:70px 70px;
+
+  mask-image:radial-gradient(circle at center, black 30%, transparent 100%);
+  pointer-events:none;
+  z-index:-3;
+}
+
+/* ANIMATED GLOW */
+body::after{
+  content:'';
+  position:fixed;
+  width:700px;
+  height:700px;
+  top:-250px;
+  right:-200px;
+
+  background:
+    radial-gradient(circle,
+      rgba(37,99,235,.22),
+      transparent 70%);
+
+  filter:blur(60px);
+
+  animation:glowMove 12s ease-in-out infinite alternate;
+  z-index:-2;
+}
+
+/* FLOATING ELEMENTS */
+.bg-element{
+  position:fixed;
+  border-radius:24px;
+  backdrop-filter:blur(10px);
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:
+    0 8px 40px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.04);
+
+  z-index:-1;
+  animation:floatCard 8s ease-in-out infinite;
+}
+
+/* BOOK STYLE */
+.bg-book{
+  width:130px;
+  height:90px;
+  top:120px;
+  left:-35px;
+  transform:rotate(-12deg);
+}
+
+/* CERTIFICATE STYLE */
+.bg-cert{
+  width:180px;
+  height:110px;
+  bottom:100px;
+  right:-45px;
+  transform:rotate(12deg);
+  animation-delay:2s;
+}
+
+/* CIRCLE */
+.bg-circle{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  top:55%;
+  left:7%;
+  animation-delay:1s;
+}
+
+/* SMALL DOT */
+.bg-dot{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#3b82f6;
+  top:22%;
+  right:18%;
+  box-shadow:0 0 18px rgba(59,130,246,.8);
+  animation:pulseDot 2s infinite;
+}
+/* ===== PREMIUM UNIQUE BUTTON ===== */
+
+.btn-primary{
+  position:relative;
+  overflow:hidden;
+
+  height:56px;
+  padding:0 28px;
+
+  border:none;
+  border-radius:18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #3b82f6,
+      #60a5fa
+    );
+
+  color:#fff;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.4px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 12px 30px rgba(37,99,235,.35),
+    inset 0 1px 0 rgba(255,255,255,.25);
+
+  transition:.35s ease;
+}
+
+/* SHINE EFFECT */
+.btn-primary::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-120%;
+
+  width:100%;
+  height:100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.35),
+      transparent
+    );
+
+  transition:.7s;
+}
+
+/* HOVER */
+.btn-primary:hover{
+  transform:translateY(-3px) scale(1.02);
+
+  box-shadow:
+    0 18px 40px rgba(37,99,235,.45),
+    inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+/* SHINE MOVE */
+.btn-primary:hover::before{
+  left:120%;
+}
+
+/* CLICK EFFECT */
+.btn-primary:active{
+  transform:scale(.98);
+}
+
+/* ICON ANIMATION */
+.btn-primary span{
+  transition:.3s ease;
+}
+
+.btn-primary:hover span{
+  transform:translateX(4px);
+}
+/* ANIMATION */
+@keyframes floatCard{
+  0%{
+    transform:translateY(0px) rotate(-8deg);
+  }
+  50%{
+    transform:translateY(-14px) rotate(-4deg);
+  }
+  100%{
+    transform:translateY(0px) rotate(-8deg);
+  }
+}
+
+@keyframes glowMove{
+  0%{
+    transform:translateX(0) translateY(0);
+  }
+  100%{
+    transform:translateX(-80px) translateY(40px);
+  }
+}
+
+@keyframes pulseDot{
+  0%{
+    transform:scale(1);
+    opacity:1;
+  }
+  50%{
+    transform:scale(1.5);
+    opacity:.5;
+  }
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+/* ===== PREMIUM OUTLINE BUTTON ===== */
+
+.btn-outline{
+  position:relative;
+  overflow:hidden;
+
+  height:56px;
+  padding:0 24px;
+
+  border:1.5px solid rgba(255,255,255,.14);
+  border-radius:18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.06),
+      rgba(255,255,255,.03)
+    );
+
+  backdrop-filter:blur(14px);
+
+  color:#e2e8f0;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.3px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.05);
+
+  transition:.35s ease;
+}
+#pdf-content{
+  width: 210mm;
+  height: 297mm;
+  padding: 10mm;
+  background: white;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 0 auto;
+  font-family: "Times New Roman", serif;
+}
+/* SOFT GLOW */
+.btn-outline::before{
+  content:'';
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.08),
+      transparent
+    );
+
+  transform:translateX(-120%);
+  transition:.7s;
+}
+
+/* HOVER */
+.btn-outline:hover{
+  transform:translateY(-2px);
+
+  border-color:rgba(96,165,250,.45);
+
+  color:#fff;
+
+  box-shadow:
+    0 14px 35px rgba(37,99,235,.18),
+    0 0 20px rgba(59,130,246,.12);
+}
+
+/* SHINE */
+.btn-outline:hover::before{
+  transform:translateX(120%);
+}
+
+/* CLICK */
+.btn-outline:active{
+  transform:scale(.98);
+}
+
+/* ICON MOVE */
+.btn-outline span{
+  transition:.3s ease;
+}
+
+.btn-outline:hover span{
+  transform:translateX(-3px);
+}
+/* APP */
+.app{
+  position:relative;
+  z-index:2;
+}
+body{
+  margin:0;
+  padding:0;
+}
+
+.lc-sheet{
+  width:190mm;
+  min-height:277mm;
+  margin:auto;
+  background:#fff;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+/* MAIN SHEET */
+
+.lc-outer{
+  border:3px solid #0f172a;
+  padding:14px 18px;
+  background:#fff;
+  position:relative;
+  box-shadow:0 0 10px rgba(0,0,0,0.08);
+}
+
+/* TOP HEADER */
+
+.lc-emblem-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.lc-sch{
+  text-align:center;
+}
+
+.lc-sch-name{
+  font-size:28px;
+  font-weight:800;
+  color:#0f172a;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  font-family:Georgia, serif;
+}
+
+.lc-sch-addr{
+  font-size:11px;
+  color:#555;
+  margin-top:4px;
+  line-height:1.4;
+}
+
+/* DIVIDERS */
+
+.lc-divider{
+  height:2px;
+  background:#0f172a;
+  margin:8px 0;
+}
+
+.lc-divider-thin{
+  height:1px;
+  background:#999;
+  margin:6px 0;
+}
+
+/* META */
+
+.lc-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:11px;
+  font-weight:600;
+  color:#222;
+}
+
+/* TITLE */
+
+.lc-title-block{
+  text-align:center;
+  margin:10px 0;
+}
+
+.lc-doc-marathi{
+  font-size:14px;
+  font-weight:700;
+  color:#991b1b;
+}
+
+.lc-doc-title{
+  font-size:24px;
+  font-weight:900;
+  color:#0f172a;
+  letter-spacing:2px;
+  margin-top:4px;
+  text-transform:uppercase;
+  font-family:Georgia, serif;
+}
+
+.lc-doc-type{
+  display:inline-block;
+  padding:5px 16px;
+  background:#0f172a;
+  color:#fff;
+  border-radius:4px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+/* FIELDS */
+
+.lc-fields{
+  margin-top:10px;
+}
+
+.lc-row{
+  display:flex;
+  border-bottom:1px solid #d1d5db;
+  padding:5px 0;
+  align-items:flex-start;
+  font-size:12px;
+}
+
+.lc-row-no{
+  width:28px;
+  font-weight:700;
+  color:#111827;
+}
+
+.lc-row-label{
+  width:220px;
+  font-weight:700;
+  color:#1e293b;
+}
+
+.lc-row-value{
+  flex:1;
+  color:#111;
+  padding-left:8px;
+  word-break:break-word;
+}
+
+/* CERTIFICATE TEXT */
+
+.lc-cert{
+  margin-top:14px;
+  padding:10px;
+  border:1px solid #cbd5e1;
+  background:#f8fafc;
+  font-size:11px;
+  line-height:1.7;
+  border-radius:4px;
+}
+
+/* SIGN AREA */
+
+.lc-sign-area{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-top:30px;
+}
+
+.lc-sign-box{
+  width:180px;
+  text-align:center;
+}
+
+.lc-sign-line{
+  border-top:1.5px solid #111;
+  margin-bottom:6px;
+}
+
+.lc-sign-lbl{
+  font-size:11px;
+  font-weight:600;
+  color:#333;
+  line-height:1.4;
+}
+
+/* STAMP */
+
+.lc-stamp-box{
+  text-align:center;
+}
+
+.lc-stamp-circle{
+  width:90px;
+  height:90px;
+  border:3px dashed #991b1b;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  text-align:center;
+  font-size:10px;
+  font-weight:700;
+  color:#991b1b;
+  line-height:1.3;
+  transform:rotate(-10deg);
+}
+
+/* PRINT */
+
+@media print{
+
+  body{
+    margin:0;
+    padding:0;
+    background:#fff;
+  }
+
+  .lc-outer{
+    box-shadow:none;
+  }
+
+}
+.lc-outer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url('https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg') center center no-repeat;
+  background-size:180px;
+  opacity:0.04;
+  pointer-events:none;
+}
+.lc-sch-name{
+  font-size:32px;
+  font-weight:900;
+  letter-spacing:2px;
+  color:#111827;
+  text-transform:uppercase;
+  font-family:"Times New Roman", serif;
+  text-shadow:1px 1px 0 #cbd5e1;
+}
+
+.lc-doc-title{
+  font-size:28px;
+  font-weight:900;
+  color:#0f172a;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  font-family:Georgia, serif;
+  border:2px solid #0f172a;
+  display:inline-block;
+  padding:6px 18px;
+  margin-top:6px;
+}
+.lc-row{
+  display:flex;
+  align-items:flex-start;
+  padding:6px 8px;
+  border-bottom:1px dashed #94a3b8;
+  font-size:12px;
+}
+
+.lc-row:nth-child(even){
+  background:#f8fafc;
+}
+
+.lc-row-label{
+  width:240px;
+  font-weight:700;
+  color:#0f172a;
+}
+
+.lc-row-value{
+  flex:1;
+  font-weight:600;
+  color:#111827;
+}
+@media print {
+
+  body{
+    margin:0;
+    padding:0;
+    background:#fff;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-family:"Times New Roman", serif;
+  }
+
+  @page{
+    size:A4 portrait;
+    margin:8mm;
+  }
+
+  .lc-outer{
+
+    border:4px double #0f172a !important;
+    padding:16px !important;
+    background:#fff !important;
+    position:relative;
+    box-shadow:none !important;
+
+  }
+
+  /* WATERMARK */
+
+  .lc-outer::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:url('https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg') center center no-repeat !important;
+    background-size:180px !important;
+    opacity:0.05 !important;
+    z-index:0;
+  }
+
+  .lc-outer *{
+    position:relative;
+    z-index:1;
+  }
+
+  /* HEADER */
+
+  .lc-sch-name{
+    font-size:30px !important;
+    font-weight:900 !important;
+    letter-spacing:2px !important;
+    text-transform:uppercase !important;
+    color:#111827 !important;
+  }
+
+  .lc-sch-addr{
+    font-size:11px !important;
+    color:#444 !important;
+  }
+
+  /* TITLE */
+
+  .lc-doc-title{
+    font-size:26px !important;
+    font-weight:900 !important;
+    border:2px solid #0f172a !important;
+    padding:5px 18px !important;
+    display:inline-block !important;
+    letter-spacing:3px !important;
+    margin-top:6px !important;
+  }
+
+  .lc-doc-marathi{
+    font-size:14px !important;
+    font-weight:700 !important;
+    color:#991b1b !important;
+  }
+
+  /* ROWS */
+
+  .lc-row{
+    border-bottom:1px dashed #64748b !important;
+    padding:6px 4px !important;
+    font-size:12px !important;
+  }
+
+  .lc-row:nth-child(even){
+    background:#f8fafc !important;
+  }
+
+  .lc-row-label{
+    width:240px !important;
+    font-weight:700 !important;
+    color:#0f172a !important;
+  }
+
+  .lc-row-value{
+    font-weight:600 !important;
+    color:#111827 !important;
+  }
+
+  /* CERTIFICATE */
+
+  .lc-cert{
+    border:1px solid #cbd5e1 !important;
+    background:#f8fafc !important;
+    padding:10px !important;
+    margin-top:14px !important;
+    line-height:1.6 !important;
+    font-size:11px !important;
+  }
+
+  /* STAMP */
+
+  .lc-stamp-circle{
+    width:95px !important;
+    height:95px !important;
+    border:4px double #991b1b !important;
+    color:#991b1b !important;
+    border-radius:50% !important;
+    font-weight:800 !important;
+    background:rgba(153,27,27,0.04) !important;
+    transform:rotate(-12deg) !important;
+  }
+
+  /* SIGN */
+
+  .lc-sign-line{
+    border-top:2px solid #111827 !important;
+  }
+
+  .lc-sign-lbl{
+    font-size:11px !important;
+    font-weight:700 !important;
+    text-transform:uppercase !important;
+  }
+
+}
+.premium-footer{
+  margin: 20px 16px;
+  font-size: 12px;
+  color: #ffffff;
+  text-align: center;
+  padding: 14px 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.08);
+  letter-spacing: 0.3px;
+}
+.premium-footer{
+  margin: 20px 16px;
+  font-size: 12px;
+  color: #ffffff;
+  text-align: center;
+  padding: 14px 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  box-shadow: 0 0 15px rgba(99,102,241,0.25);
+  border: 1px solid rgba(99,102,241,0.3);
+  letter-spacing: 0.4px;
+  transition: 0.3s ease;
+}
+
+.premium-footer:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(99,102,241,0.4);
+}
+.lc-footer{
+  margin-top: 30px;
+  padding: 18px 10px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.lc-footer-content{
+  text-align: center;
+  color: #ffffff;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+
+.lc-footer-content strong{
+  display: block;
+  font-weight: 600;
+}
+
+.lc-subtext{
+  margin-top: 6px;
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+/* Glow effect */
+.lc-footer:hover{
+  box-shadow: 0 -5px 25px rgba(59,130,246,0.25);
+  transition: 0.3s ease;
+}
+
+</style>
+
+
+<div class="bg-dot"></div>
+<div class="edu-shape s1"></div>
+<div class="edu-shape s2"></div>
+<div class="edu-shape s3"></div>
+<div class="app">
+
+<!-- PREMIUM HEADER -->
+<div class="top-hero">
+
+  <div class="hero-overlay"></div>
+
+  <div class="hdr premium-hdr">
+
+    <div class="hdr-left">
+      <div class="hdr-logo-wrap">
+        <div class="hdr-logo">LC</div>
+      </div>
+
+      <div class="hdr-txt">
+        <h1>Leaving Certificate Portal</h1>
+        <p>Professional LC Generator</p>
+      </div>
+    </div>
+
+    <div class="hdr-right">
+
+  <div class="price-badge">
+    <span class="price-small">Starting From</span>
+
+    <div class="price-row">
+      <span class="rupee">₹</span>
+      <span class="price-main">30</span>
+    </div>
+
+    <span class="price-tag">LC DOWNLOAD</span>
+  </div>
+
+</div>
+  <!-- PREMIUM HERO CONTENT -->
+
+<div class="hero-content">
+
+  <!-- TOP TAG -->
+
+
+  <!-- MAIN TITLE -->
+  <h2 class="hero-title">
+    Generate <span>Premium</span><br>
+    School Leaving Certificates<br>
+    <strong>Instantly</strong>
+  </h2>
+
+  <!-- SUBTEXT -->
+  <p class="hero-subtitle">
+    Professional LC Generator with Modern A4 Layout,
+    Secure PDF Download and Instant Certificate Creation.
+  </p>
+
+  <!-- FEATURE CARDS -->
+  <div class="hero-cards">
+
+    <div class="hero-mini-card">
+      <div class="mini-icon">⚡</div>
+      <div>
+        <h4>Instant Generation</h4>
+        <span>Create LC in Seconds</span>
+      </div>
+    </div>
+
+    <div class="hero-mini-card">
+      <div class="mini-icon">🖨️</div>
+      <div>
+        <h4>Print Ready</h4>
+        <span>Perfect A4 Format</span>
+      </div>
+    </div>
+
+    <div class="hero-mini-card">
+      <div class="mini-icon">🔒</div>
+      <div>
+        <h4>Secure PDF</h4>
+        <span>Safe & Fast Download</span>
+      </div>
+    </div>
+
+  </div>
+
+
+
+<!-- MODERN STEP BAR -->
+<div class="steps-wrapper">
+
+<div class="steps-bar" id="stepsBar">
+
+  <div class="step-item active" id="st1">
+    <div class="step-dot">1</div>
+    <span>Select Type</span>
+  </div>
+
+  <div class="step-line"></div>
+
+  <div class="step-item" id="st2">
+    <div class="step-dot">2</div>
+    <span>Fill Form</span>
+  </div>
+
+  <div class="step-line"></div>
+
+  <div class="step-item" id="st3">
+    <div class="step-dot">3</div>
+    <span>Preview</span>
+  </div>
+
+  <div class="step-line"></div>
+
+  <div class="step-item" id="st4">
+    <div class="step-dot">4</div>
+    <span>Payment</span>
+  </div>
+
+  <div class="step-line"></div>
+
+  <div class="step-item" id="st5">
+    <div class="step-dot">5</div>
+    <span>Download</span>
+  </div>
+
+</div>
+
+</div>
+
+<div id="appBody"></div>
+
+</div>
+
+
+
+<script>
+let curStep=1, lcType='', formData={}, txnId='';
+
+function setStep(n){
+  curStep=n;
+  ['st1','st2','st3','st4','st5'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.className='step-item'+(i+1===n?' active':i+1<n?' done':'');
+    el.querySelector('.step-dot').textContent = i+1<n ? '✓' : i+1;
+  });
+}
+
+function render(html){document.getElementById('appBody').innerHTML=html;}
+
+function showTypeSelect(){
+  setStep(1);
+  render(`
+  <div class="card">
+    <div class="section-hd">Select Certificate Type</div>
+    <div style="font-size:13px;color:#616161;margin-bottom:16px">Choose the appropriate certificate based on the student's class</div>
+  </div>
+  <div class="type-grid">
+    <div class="type-card" onclick="selectType('Primary')">
+      <div class="tc-icon">📗</div>
+      <div class="tc-name">Primary LC</div>
+      <div class="tc-sub">Class 1st to 8th</div>
+    </div>
+    <div class="type-card" onclick="selectType('Secondary')">
+      <div class="tc-icon">📘</div>
+      <div class="tc-name">Secondary LC</div>
+      <div class="tc-sub">SSC · Class 9th & 10th</div>
+    </div>
+    <div class="type-card" onclick="selectType('HSC')">
+      <div class="tc-icon">📙</div>
+      <div class="tc-name">Higher Secondary</div>
+      <div class="tc-sub">HSC · Class 11th & 12th</div>
+    </div>
+  </div>
+ <footer class="lc-footer">
+  <div class="lc-footer-content">
+    <strong>
+      System developed & maintained by 
+      : Future Dreams IT Resource (9689827518)
+    </strong>
+    <div class="lc-subtext">Secure • Fast • Digital Certificate System</div>
+  </div>
+</footer>
+  </div>`);
+}
+
+function selectType(t){
+  lcType=t;
+  showForm();
+}
+
+function g(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+function v(id){return document.getElementById(id);}
+
+function showForm(){
+  setStep(2);
+  const hsc = lcType==='HSC';
+  render(`
+  <div class="card">
+    <div class="section-hd"><i class="ti ti-building" aria-hidden="true" style="font-size:16px"></i> School Information</div>
+    <div class="fg"><label>School Name (English)</label><input id="sch_name" placeholder="e.g. Indira Gandhi Vidya Mandir" value="${formData.sch_name||''}"></div>
+    <div class="fg"><label>Sanstha Name (English)</label><input id="sch_name_mr" placeholder="e.g. Mundada Foundation" value="${formData.sch_name_mr||''}"></div>
+    <div class="fg"><label>School Address</label><textarea id="sch_addr" placeholder="Full address, Taluka, District, Pin">${formData.sch_addr||''}</textarea></div>
+    <div class="row2">
+      <div class="fg"><label>Recognition No.</label><input id="rec_no" placeholder="MH/2345/67" value="${formData.rec_no||''}"></div>
+      <div class="fg"><label>UDISE No.</label><input id="udise" placeholder="11 digit code" value="${formData.udise||''}"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Index No.</label><input id="idx_no" placeholder="Index Number" value="${formData.idx_no||''}"></div>
+      <div class="fg"><label>LC Serial No.</label><input id="lc_no" placeholder="e.g. 2024-25 / 001" value="${formData.lc_no||''}"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-hd"><i class="ti ti-user" aria-hidden="true" style="font-size:16px"></i> Student Information</div>
+    <div class="row2">
+      <div class="fg"><label>Student Full Name</label><input id="stu_name" placeholder="As per birth certificate" value="${formData.stu_name||''}"></div>
+      <div class="fg"><label>Mother's Name</label><input id="mother_name" placeholder="Mother's full name" value="${formData.mother_name||''}"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Date of Birth</label><input id="dob" type="date" value="${formData.dob||''}"></div>
+      <div class="fg"><label>Place of Birth</label><input id="pob" placeholder="City / Village" value="${formData.pob||''}"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Nationality</label><input id="nationality" placeholder="Indian" value="${formData.nationality||'Indian'}"></div>
+      <div class="fg"><label>Mother Tongue</label><input id="mother_tongue" placeholder="e.g. Marathi" value="${formData.mother_tongue||''}"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Religion</label><input id="religion" placeholder="e.g. Hindu" value="${formData.religion||''}"></div>
+      <div class="fg"><label>Caste / Sub-Caste</label><input id="caste" placeholder="Caste" value="${formData.caste||''}"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Aadhaar No.</label><input id="aadhaar" placeholder="XXXX XXXX XXXX" maxlength="14" value="${formData.aadhaar||''}"></div>
+      <div class="fg"><label>PEN No.</label><input id="pen" placeholder="PEN Number" value="${formData.pen||''}"></div>
+    </div>
+    <div class="fg"><label>Last School Attended</label><input id="last_school" placeholder="Previous school name (if any)" value="${formData.last_school||''}"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-hd"><i class="ti ti-calendar" aria-hidden="true" style="font-size:16px"></i> Admission & Leaving Details</div>
+    <div class="row2">
+      <div class="fg"><label>Date of Admission</label><input id="date_adm" type="date" value="${formData.date_adm||''}"></div>
+      <div class="fg"><label>Admitted to Standard</label><input id="adm_std" placeholder="e.g. 1st" value="${formData.adm_std||''}"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Date of Leaving</label><input id="date_leave" type="date" value="${formData.date_leave||''}"></div>
+      <div class="fg"><label>Leaving from Standard</label><input id="leave_std" placeholder="e.g. 8th" value="${formData.leave_std||''}"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Progress</label>
+        <select id="progress">
+          <option ${formData.progress==='Satisfactory'?'selected':''}>Satisfactory</option>
+          <option ${formData.progress==='Good'?'selected':''}>Good</option>
+          <option ${formData.progress==='Very Good'?'selected':''}>Very Good</option>
+          <option ${formData.progress==='Excellent'?'selected':''}>Excellent</option>
+        </select>
+      </div>
+      <div class="fg"><label>Conduct</label>
+        <select id="conduct">
+          <option ${formData.conduct==='Good'?'selected':''}>Good</option>
+          <option ${formData.conduct==='Very Good'?'selected':''}>Very Good</option>
+          <option ${formData.conduct==='Excellent'?'selected':''}>Excellent</option>
+          <option ${formData.conduct==='Satisfactory'?'selected':''}>Satisfactory</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Reason of Leaving</label><input id="reason" placeholder="e.g. Passed / Left for other school" value="${formData.reason||''}"></div>
+      <div class="fg"><label>Date of Issue</label><input id="issue_date" type="date" value="${formData.issue_date||(new Date().toISOString().split('T')[0])}"></div>
+    </div>
+    ${hsc?`
+    <div style="border-top:1px dashed #c5cae9;margin:12px 0 14px;padding-top:14px">
+    <div class="section-hd" style="margin-bottom:12px"><i class="ti ti-school" aria-hidden="true" style="font-size:16px"></i> HSC Extra Details</div>
+    <div class="row3">
+      <div class="fg"><label>Stream</label>
+        <select id="stream">
+          <option ${formData.stream==='Science'?'selected':''}>Science</option>
+          <option ${formData.stream==='Commerce'?'selected':''}>Commerce</option>
+          <option ${formData.stream==='Arts'?'selected':''}>Arts</option>
+        </select>
+      </div>
+      <div class="fg"><label>PRN No.</label><input id="prn" placeholder="PRN" value="${formData.prn||''}"></div>
+      <div class="fg"><label>Enroll No.</label><input id="enroll" placeholder="Enrollment" value="${formData.enroll||''}"></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Seat No.</label><input id="seat_no" placeholder="Seat Number" value="${formData.seat_no||''}"></div>
+      <div class="fg"><label>Passing Year</label><input id="pass_year" placeholder="e.g. 2024" value="${formData.pass_year||''}"></div>
+    </div>
+    </div>`:''}
+  </div>
+
+  <div style="margin:0 16px 16px;display:flex;gap:10px">
+  <button class="btn-outline" onclick="showTypeSelect()">
+  <span>←</span>
+  Back
+</button>
+<button class="btn-primary" onclick="collectAndPreview()">
+  Preview LC
+  <span>→</span>
+</button>
+  </div>`);
+}
+
+function fmtDate(d){
+  if(!d)return'';
+  const [y,m,day]=d.split('-');
+  return day+'/'+m+'/'+y;
+}
+
+function dobInWords(dob){
+  if(!dob)return'';
+  const dt=new Date(dob);
+  const D=dt.getDate(), M=dt.getMonth(), Y=dt.getFullYear();
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen','Twenty','Twenty One','Twenty Two','Twenty Three','Twenty Four','Twenty Five','Twenty Six','Twenty Seven','Twenty Eight','Twenty Nine','Thirty','Thirty One'];
+  const thous=['','One Thousand','Two Thousand'];
+  const hunds=['','One Hundred','Two Hundred','Three Hundred','Four Hundred','Five Hundred','Six Hundred','Seven Hundred','Eight Hundred','Nine Hundred'];
+  const tens=['','Ten','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  let y=Y, yStr='';
+  let th=Math.floor(y/1000); y%=1000;
+  let h=Math.floor(y/100); y%=100;
+  let t=Math.floor(y/10); let o=y%10;
+  yStr=(th?thous[th]+' ':'')+( h?hunds[h]+' ':'')+( t||o ? (y<21?ones[y]:tens[t]+(o?' '+ones[o]:'')): '');
+  return ones[D]+' '+months[M]+' '+yStr.trim();
+}
+
+function collectAndPreview(){
+  formData={
+    sch_name:g('sch_name'),sch_name_mr:g('sch_name_mr'),sch_addr:g('sch_addr'),
+    rec_no:g('rec_no'),udise:g('udise'),idx_no:g('idx_no'),lc_no:g('lc_no'),
+    stu_name:g('stu_name'),mother_name:g('mother_name'),dob:g('dob'),pob:g('pob'),
+    nationality:g('nationality')||'Indian',mother_tongue:g('mother_tongue'),
+    religion:g('religion'),caste:g('caste'),aadhaar:g('aadhaar'),pen:g('pen'),
+    last_school:g('last_school'),date_adm:g('date_adm'),adm_std:g('adm_std'),
+    date_leave:g('date_leave'),leave_std:g('leave_std'),
+    progress:g('progress'),conduct:g('conduct'),reason:g('reason'),issue_date:g('issue_date'),
+  };
+  if(lcType==='HSC'){
+    Object.assign(formData,{stream:g('stream'),prn:g('prn'),enroll:g('enroll'),seat_no:g('seat_no'),pass_year:g('pass_year')});
+  }
+  showPreview();
+}
+
+function lcHtml(){
+  const d=formData;
+  const hsc=lcType==='HSC';
+  const typeLabel=lcType==='Primary'?'PRIMARY SCHOOL LEAVING CERTIFICATE':lcType==='Secondary'?'SECONDARY SCHOOL LEAVING CERTIFICATE (SSC)':'HIGHER SECONDARY LEAVING CERTIFICATE (HSC)';
+  const typeLblMr=lcType==='Primary'?'प्राथमिक शाळा सोडल्याचा दाखला':lcType==='Secondary'?'माध्यमिक शाळा सोडल्याचा दाखला':'उच्च माध्यमिक शाळा सोडल्याचा दाखला';
+
+  const row=(n,lbl,lbl_mr,val)=>`
+    <div class="lc-row">
+      <span class="lc-sno">${n}</span>
+      <span class="lc-lbl">${lbl}<span class="lc-lbl-mr">${lbl_mr}</span></span>
+      <span class="lc-colon">:</span>
+      <span class="lc-val">${val||''}</span>
+    </div>`;
+
+  return `<div class="lc-sheet">
+  <div class="lc-outer">
+    <div class="lc-emblem-row">
+      <div class="lc-sch">
+        <div class="lc-sch-name">${d.sch_name||'School Name'}</div>
+        <div class="lc-sch-addr">${(d.sch_addr||'School Address').replace(/\n/g,' | ')}</div>
+      </div>
+    </div>
+    <div class="lc-divider"></div>
+    <div class="lc-meta">
+      <span>Reg. No. / मान्यता क्र.: <b>${d.rec_no||'—'}</b></span>
+      <span>UDISE: <b>${d.udise||'—'}</b></span>
+      <span>Index No.: <b>${d.idx_no||'—'}</b></span>
+    </div>
+    <div class="lc-divider-thin"></div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:#555;margin:4px 0">
+      <span>LC No. / दाखला क्र.: <b>${d.lc_no||'—'}</b></span>
+      <span>Date / दिनांक: <b>${fmtDate(d.issue_date)}</b></span>
+    </div>
+    <div class="lc-divider"></div>
+    <div class="lc-title-block">
+      <div class="lc-doc-marathi">${typeLblMr}</div>
+      <div class="lc-doc-title">SCHOOL LEAVING CERTIFICATE</div>
+      <div style="margin-top:4px"><span class="lc-doc-type">${typeLabel}</span></div>
+    </div>
+    <div class="lc-divider" style="margin-top:8px"></div>
+    <div class="lc-fields">
+      ${row(1,'Name of Student','विद्यार्थ्याचे नाव',d.stu_name)}
+      ${row(2,"Mother's Name","आईचे नाव",d.mother_name)}
+      ${row(3,'Nationality','राष्ट्रीयत्व',d.nationality)}
+      ${row(4,'Mother Tongue','मातृभाषा',d.mother_tongue)}
+      ${row(5,'Religion','धर्म',d.religion)}
+      ${row(6,'Caste / Sub-Caste','जात / पोट जात',d.caste)}
+      ${row(7,'Place of Birth','जन्मस्थान',d.pob)}
+      ${row(8,'Date of Birth (Figures)','जन्म दिनांक (अंकात)',fmtDate(d.dob))}
+      ${row(9,'Date of Birth (In Words)','जन्म दिनांक (अक्षरी)',dobInWords(d.dob))}
+      ${row(10,'Aadhaar Number','आधार क्रमांक',d.aadhaar)}
+      ${row(11,'PEN Number','पेन क्रमांक',d.pen)}
+      ${row(12,'Last School Attended','मागील शाळेचे नाव',d.last_school||'—')}
+      ${row(13,'Date of Admission','प्रवेश दिनांक',fmtDate(d.date_adm))}
+      ${row(14,'Admitted to Standard','प्रवेश इयत्ता',d.adm_std)}
+      ${row(15,'Progress','प्रगती',d.progress)}
+      ${row(16,'Conduct','वर्तणूक',d.conduct)}
+      ${row(17,'Date of Leaving','शाळा सोडल्याची तारीख',fmtDate(d.date_leave))}
+      ${row(18,'Leaving from Standard','सोडल्याची इयत्ता',d.leave_std)}
+      ${row(19,'Reason of Leaving','शाळा सोडण्याचे कारण',d.reason)}
+      ${hsc?row(20,'Stream / Faculty','शाखा / विभाग',d.stream):''}
+      ${hsc?row(21,'PRN Number','पीआरएन क्रमांक',d.prn):''}
+      ${hsc?row(22,'Enrollment No.','नोंदणी क्र.',d.enroll):''}
+      ${hsc?row(23,'Seat Number','आसन क्रमांक',d.seat_no):''}
+      ${hsc?row(24,'Passing Year','उत्तीर्ण वर्ष',d.pass_year):''}
+    </div>
+    <div class="lc-cert">
+      <b>Certified / प्रमाणित केले जाते की:</b> The above particulars are true and correct as per the school records and registers.
+      वरील माहिती शाळेच्या नोंदवह्यांनुसार खरी व बरोबर आहे.
+    </div>
+    <div class="lc-sign-area">
+      <div class="lc-sign-box">
+        <div class="lc-sign-line"></div>
+        <div class="lc-sign-lbl">Clerk / Office Staff<br>लिपिक / कार्यालयीन कर्मचारी</div>
+      </div>
+      <div class="lc-stamp-box">
+        <div class="lc-stamp-circle">SCHOOL<br>ROUND<br>STAMP<br>शाळेची<br>मुद्रा</div>
+        <div class="lc-sign-lbl">Official Stamp / अधिकृत शिक्का</div>
+      </div>
+      <div class="lc-sign-box">
+        <div class="lc-sign-line"></div>
+        <div class="lc-sign-lbl">Principal / Head Master<br>मुख्याध्यापक / प्राचार्य</div>
+      </div>
+    </div>
+   
+  </div>
+</div>`;
+}
+
+function showPreview(){
+  setStep(3);
+  render(`
+  <div class="preview-wrap">
+    <div class="preview-actions">
+      <button class="btn-edit" onclick="showForm()"><i class="ti ti-edit" aria-hidden="true"></i> Edit Details</button>
+      <button class="btn-pay" onclick="showPayment()"><i class="ti ti-lock" aria-hidden="true"></i> Pay ₹30 & Download</button>
+    </div>
+    <div id="lcPreviewDoc">${lcHtml()}</div>
+  
+  </div>`);
+}
+
+function showPayment(){
+  setStep(4);
+  render(`
+  <div class="pay-modal-wrap">
+    <div class="pay-modal">
+      <h2>Complete Payment</h2>
+      <p>Your LC is ready. Pay to unlock PDF download.</p>
+      <div class="amt-box">
+        <div class="amt-val">₹ 30</div>
+        <div class="amt-sub">LC Generation Fee · One Time</div>
+      </div>
+      <input class="pay-input" id="pay_email" type="email" placeholder="Email address (for receipt)">
+      <input class="pay-input" id="pay_phone" type="tel" placeholder="WhatsApp number (PDF will be sent)">
+      <button class="btn-primary btn-gold" style="border-radius:8px;font-size:14px" onclick="processPayment()">
+        Pay ₹30 via Razorpay
+      </button>
+      <button onclick="showPreview()" style="width:100%;margin-top:8px;padding:9px;background:none;border:none;color:#757575;font-size:12px;cursor:pointer;font-family:inherit">← Back to Preview</button>
+      <div class="secure-note">🔒 256-bit SSL · Razorpay secured payment</div>
+    </div>
+  </div>`);
+}
+
+function processPayment(){
+  const email=g('pay_email'), phone=g('pay_phone');
+  if(!email && !phone){
+    alert('Please enter your email or WhatsApp number to proceed.');
+    return;
+  }
+  txnId='RZP'+Date.now().toString().slice(-10);
+  showSuccess(email, phone);
+}
+
+function showSuccess(email, phone){
+  setStep(5);
+  render(`
+  <div class="success-wrap">
+    <div class="success-circle">✓</div>
+    <h2>Payment Successful!</h2>
+    <p>Your Leaving Certificate is ready to download.<br>
+    ${email?'Receipt sent to <b>'+email+'</b>':''}
+    ${phone?'<br>PDF sent to WhatsApp <b>'+phone+'</b>':''}</p>
+    <div class="txn-card">
+      <div style="font-size:11px;color:#9e9e9e;margin-bottom:4px">TRANSACTION DETAILS</div>
+      <div><b>Transaction ID:</b> ${txnId}</div>
+      <div><b>Amount Paid:</b> ₹30</div>
+      <div><b>Status:</b> <span style="color:#2e7d32;font-weight:600">Success</span></div>
+    </div>
+    <div class="dl-row">
+      <button class="btn-dl" onclick="downloadLC()"><i class="ti ti-download" aria-hidden="true"></i> Download LC PDF</button>
+      <button class="btn-new" onclick="showTypeSelect()"><i class="ti ti-plus" aria-hidden="true"></i> New LC</button>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:#9e9e9e">
+      Having trouble? Contact support · support@lcportal.in
+    </div>
+  </div>`);
+}
+
+function downloadLC() {
+
+  const element = document.getElementById('pdf-content');
+
+  const opt = {
+
+    margin: 0,
+
+    filename: `Leaving-Certificate-${formData.stu_name || 'Student'}.pdf`,
+
+    image: {
+      type: 'jpeg',
+      quality: 1
+    },
+
+    html2canvas: {
+      scale: 2,
+      scrollY: 0
+    },
+
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait'
+    }
+  };
+
+  html2pdf()
+    .set(opt)
+    .from(element)
+    .save();
+
+
+  const win=window.open('','_blank');
+  const lc=lcHtml();
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Leaving Certificate - ${formData.stu_name||'Student'}</title>
+  <style>
+  @media print{body{margin:0}@page{size:A4;margin:8mm}}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Times New Roman',Georgia,serif;background:#fff;padding:8mm}
+  .lc-sheet{background:#fff;width:100%;max-width:210mm}
+  .lc-outer{border:4px double #1a237e;margin:0;padding:10px 16px}
+  .lc-top-strip{background:#1a237e;color:#fff;text-align:center;padding:5px 8px;font-size:9px;letter-spacing:2px;margin:-10px -16px 10px;font-family:Arial,sans-serif}
+  .lc-emblem-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
+  .lc-emblem{width:42px;height:42px;border:2px solid #1a237e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#1a237e;text-align:center;font-weight:700;flex-shrink:0}
+  .lc-sch{text-align:center}
+  .lc-sch-name{font-size:16px;font-weight:700;color:#1a237e}
+  .lc-sch-name-mr{font-size:12px;color:#1a237e;font-weight:600;margin-bottom:2px}
+  .lc-sch-addr{font-size:9px;color:#555}
+  .lc-divider{height:2px;background:#1a237e;margin:8px 0 6px}
+  .lc-divider-thin{height:0.5px;background:#1a237e;margin:4px 0}
+  .lc-meta{display:flex;justify-content:space-between;font-size:9px;color:#333;margin-bottom:6px}
+  .lc-title-block{text-align:center;margin:6px 0}
+  .lc-doc-title{font-size:15px;font-weight:700;color:#1a237e;letter-spacing:2px;text-decoration:underline}
+  .lc-doc-marathi{font-size:11px;color:#b71c1c;font-weight:600;margin-top:2px}
+  .lc-doc-type{display:inline-block;background:#1a237e;color:#fff;font-size:8px;padding:2px 10px;border-radius:2px;margin-top:3px;letter-spacing:1px;font-family:Arial}
+  .lc-fields{margin-top:8px}
+  .lc-row{display:flex;align-items:baseline;border-bottom:0.5px solid #d0d0d0;padding:3.5px 0;gap:4px}
+  .lc-sno{font-size:9px;color:#888;min-width:14px}
+  .lc-lbl{font-size:10px;color:#444;min-width:120px;flex-shrink:0;line-height:1.3}
+  .lc-lbl-mr{font-size:8px;color:#666;display:block}
+  .lc-colon{font-size:10px;margin:0 3px}
+  .lc-val{font-size:10.5px;font-weight:700;color:#1a237e;flex:1;border-bottom:1px dotted #999;min-height:14px;padding-bottom:1px}
+  .lc-cert{margin-top:8px;padding:5px 8px;border:1px solid #c8a400;background:#fffde7;font-size:8.5px;color:#555;border-radius:3px}
+  .lc-sign-area{display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px;padding-top:8px;border-top:1.5px solid #1a237e}
+  .lc-sign-box{text-align:center;flex:1}
+  .lc-sign-line{height:30px;border-bottom:1px solid #333;margin-bottom:3px}
+  .lc-sign-lbl{font-size:8px;color:#555;text-transform:uppercase;letter-spacing:0.5px;font-family:Arial}
+  .lc-stamp-box{text-align:center;flex:1.2}
+  .lc-stamp-circle{width:70px;height:70px;border-radius:50%;border:2px dashed #999;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#aaa;text-align:center;line-height:1.3;font-family:Arial}
+  .lc-footer{text-align:center;font-size:8px;color:#888;margin-top:8px;padding-top:6px;border-top:0.5px solid #e0e0e0;font-family:Arial}
+  </style>
+  <script>window.onload=function(){window.print();}<\/script>
+  </head><body>${lc}</body></html>`);
+  win.document.close();
+}
+function processPayment(){
+
+  const email = g('pay_email');
+  const phone = g('pay_phone');
+
+  if(!email && !phone){
+    alert('Please enter your email or WhatsApp number');
+    return;
+  }
+
+  const options = {
+
+    key: "rzp_live_SVTO0UZWoqIgIs",
+
+    amount: 3000, // 30 rupees
+
+    currency: "INR",
+
+    name: "LC Portal",
+
+    description: "Leaving Certificate Download",
+
+    image: "https://cdn-icons-png.flaticon.com/512/3135/3135755.png",
+
+    handler: function (response) {
+
+      txnId = response.razorpay_payment_id;
+
+      showSuccess(email, phone);
+
+    },
+
+    prefill: {
+      email: email,
+      contact: phone
+    },
+
+    theme: {
+      color: "#1e3a8a"
+    }
+
+  };
+
+  const rzp = new Razorpay(options);
+
+  rzp.open();
+
+}
+
+showTypeSelect();
+</script>
